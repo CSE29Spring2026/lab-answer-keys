@@ -17,7 +17,7 @@ char capitalize_char(char ch) {
 void alternate_caps(char str[]) {
     int len = strlen(str);
 
-    for(int i = 0; i != len; i += 2) {
+    for(int i = 0; i < len; i += 2) { //change to <
         str[i] = capitalize_char(str[i]);
     }
 }
