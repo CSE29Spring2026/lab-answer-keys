@@ -4,10 +4,12 @@
 int A_to_B(char str[]) {
     int num_As = 0;
     for (int i=0; str[i] != '\0'; i++) {
-        if (str[i] = 'A')
+        if (str[i] == 'A'){ // fix to == and add brackets
             num_As += 1;
             str[i] = 'B';
+        }
     }
+    return num_As;  //add a return
 }
 
 int main(int argc, char *argv[]) {
