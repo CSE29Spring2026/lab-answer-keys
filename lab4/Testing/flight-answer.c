@@ -40,40 +40,54 @@ void bad_free_path_1(struct airport *path) {
     }
 }
 
-int bad_remove_element(struct airport **path, char *name) {
-    struct airport *ptr = *path;
-    while (ptr != NULL) {
-        if (strcmp(ptr->name, name) == 0) {
-            ptr->next = ptr->next->next;
+int bad_remove_element(struct airport **path, char *name) { //removed ptr->next instead of ptr, needs to remove head, free removed node
+    struct airport *curr = *path;
+    struct airport *prev = NULL;
+
+    while (curr != NULL) {
+        if (strcmp(curr->name, name) == 0) {
+          
+            if (prev == NULL) {
+                *path = curr->next;
+            } else {
+                prev->next = curr->next;
+            }
+
+            free(curr);
             return 1;
         }
-        ptr = ptr->next;
+        prev = curr;
+        curr = curr->next;
     }
 
     return 0;
 }
 
-int bad_insert_element_at_pos(struct airport **path, char *name, int pos) {
-    struct airport *ptr = *path;
-
+int bad_insert_element_at_pos(struct airport **path, char *name, int pos) {  //strcopy overflow, fix 0 logic, traverse better
     struct airport *new_airport = malloc(sizeof(struct airport));
-    strcpy(new_airport->name, name);
-
-    int i = 1;
+    strncpy(new_airport->name, name, 3);
+    new_airport->name[3] = '\0';  
     if (pos == 0) {
+        new_airport->next = *path;
         *path = new_airport;
-        new_airport->next = ptr->next;
+        return 1;
     }
-    while (ptr->next != NULL) {
-        if (i == pos) {
-            new_airport->next = ptr->next;
-            ptr->next = new_airport;
-            return 1;
-        }
+
+    struct airport *curr = *path;
+    int i = 0;
+
+    while (curr != NULL && i < pos - 1) {
+        curr = curr->next;
         i++;
-        ptr = ptr->next;
     }
-    return 0;
+    if (curr == NULL) {
+        free(new_airport);
+        return 0;
+    }
+
+    new_airport->next = curr->next;
+    curr->next = new_airport;
+    return 1;
 }
 
 void print_list(struct airport *curr) {
